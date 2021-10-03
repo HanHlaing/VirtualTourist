@@ -10,7 +10,11 @@ import UIKit
 
 class ImageViewCell: UICollectionViewCell {
     
-    @IBOutlet var imageView: UIImageView!
+    @IBOutlet var imageView: UIImageView!{
+        didSet{
+            imageView.image = UIImage(named: "noImagePlaceholder")
+        }
+    }
     @IBOutlet var activityIndicator: UIActivityIndicatorView!
     
     public func showActivityIndicator() {

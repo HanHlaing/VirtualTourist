@@ -10,10 +10,6 @@ import CoreData
 import UIKit
 
 extension PhotoAlbumViewController: UICollectionViewDataSource {
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return fetchedResultsController?.sections?.count ?? 1
-    }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Check if the download has finished
