@@ -9,7 +9,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class TravelLocationsMapViewController: UIViewController,MKMapViewDelegate, UIGestureRecognizerDelegate {
+class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     
     //MARK: - Outlets
     
@@ -85,6 +85,7 @@ class TravelLocationsMapViewController: UIViewController,MKMapViewDelegate, UIGe
         }
     }
     
+    
     // Save the Pin in Core Data Stack
     func savePin(_ annotation: MKPointAnnotation) {
         
@@ -95,7 +96,24 @@ class TravelLocationsMapViewController: UIViewController,MKMapViewDelegate, UIGe
             newPin.subtitle = annotation.subtitle
             newPin.longitude = annotation.coordinate.longitude
             newPin.latitude = annotation.coordinate.latitude
+            self.downloadFlickrPhotos(pin: newPin)
             try? mainContext.save()
+        }
+    }
+    
+    func downloadFlickrPhotos(pin: Pin) {
+        // Download photos before going to the next controller
+        FlickrClient.getPhotosByLocation(lat: pin.latitude, lon: pin.longitude) { response, error in
+            guard let response = response else {
+                showError(message: Errors.flickrServer.localizedDescription, actualVC: self)
+                return
+            }
+            
+            for photo in response.photos.photo {
+                let imgPath = FlickrClient.getImgPath(photoStruct: photo)
+                let photoInstance = FlickrClient.savePhotoURL(imgPath: imgPath, context: self.dataController.viewContext)
+                pin.addToPhotos(photoInstance)
+            }
         }
     }
     
@@ -115,6 +133,16 @@ class TravelLocationsMapViewController: UIViewController,MKMapViewDelegate, UIGe
         if let pins = fetchedResultsController.fetchedObjects {
             self.mapView.addAnnotations(pins)
         }
+    }
+    
+    func segueToAlbum(_sender: Any?) {
+        // Inject data into the next controller
+        let identifier = "PhotoAlbumViewController"
+        let albumVC = storyboard?.instantiateViewController(identifier: identifier) as! PhotoAlbumViewController
+        let pinSelected = _sender as! Pin
+        albumVC.dataController = self.dataController
+        albumVC.pinSelected = pinSelected
+        navigationController?.pushViewController(albumVC, animated: true)
     }
     
     //MARK: - Delegate methods
@@ -148,6 +176,11 @@ class TravelLocationsMapViewController: UIViewController,MKMapViewDelegate, UIGe
             "longitudeDelta" : mapView.region.span.longitudeDelta
         ]
         UserDefaults.standard.set(mapRegion, forKey: regionKey)
+    }
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        mapView.deselectAnnotation(view.annotation, animated: true)
+        segueToAlbum(_sender: view.annotation)
     }
 }
 

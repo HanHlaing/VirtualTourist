@@ -12,10 +12,10 @@
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="subtitle" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
-        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="pin" inverseEntity="Photo"/>
+        <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Photo" inverseName="pin" inverseEntity="Photo"/>
     </entity>
     <elements>
-        <element name="Pin" positionX="-63" positionY="-18" width="128" height="133"/>
         <element name="Photo" positionX="187.260009765625" positionY="-14.39935302734375" width="128" height="103"/>
+        <element name="Pin" positionX="-63" positionY="-18" width="128" height="133"/>
     </elements>
 </model>
