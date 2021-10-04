@@ -9,6 +9,8 @@ import Foundation
 import CoreData
 import UIKit
 
+//MARK: - Photo Albume CollectionView
+
 extension PhotoAlbumViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -77,6 +79,7 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
     
 }
 
+//MARK: - Photo Albume FetchedResults
 
 extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
     
