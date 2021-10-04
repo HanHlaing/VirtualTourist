@@ -24,7 +24,7 @@ extension Errors: LocalizedError {
     }
 }
 
-// Function that shows them
+// Commom alert for errors
 func showError(message: String, actualVC: UIViewController) {
     let alertVC = UIAlertController(title: "An Error Has Occurred", message: message, preferredStyle: .alert)
     alertVC.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

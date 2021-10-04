@@ -101,8 +101,9 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         }
     }
     
+    // Download photos before going to the next controller
     func downloadFlickrPhotos(pin: Pin) {
-        // Download photos before going to the next controller
+    
         FlickrClient.getPhotosByLocation(lat: pin.latitude, lon: pin.longitude) { response, error in
             guard let response = response else {
                 showError(message: Errors.flickrServer.localizedDescription, actualVC: self)

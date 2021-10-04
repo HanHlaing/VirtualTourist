@@ -10,7 +10,11 @@ import CoreData
 import UIKit
 
 extension PhotoAlbumViewController: UICollectionViewDataSource {
-
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return fetchedResultsController?.sections?.count ?? 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Check if the download has finished
         if (activityIndicator.isAnimating) && (fetchedResultsController.sections?[section].numberOfObjects != 0) {
@@ -29,13 +33,13 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let Photo = fetchedResultsController.object(at: indexPath)
+        let photo = fetchedResultsController.object(at: indexPath)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseId, for: indexPath) as! ImageViewCell
         let mainContext = dataController.viewContext
         // Download an image per cell
-        if Photo.image == nil && Photo.imageUrl != nil {
+        if photo.image == nil && photo.imageUrl != nil {
             cell.showActivityIndicator()
-            FlickrClient.downloadImage(imgUrl: Photo.imageUrl!) { data, error in
+            FlickrClient.downloadImage(imgUrl: photo.imageUrl!) { data, error in
                 guard let data = data else {
                     cell.hideActivityIndicator()
                     return
@@ -45,15 +49,15 @@ extension PhotoAlbumViewController: UICollectionViewDataSource {
                     cell.hideActivityIndicator()
                 }
                 mainContext.perform {
-                    Photo.image = data
+                    photo.image = data
                     try? mainContext.save()
                 }
             }
         }
         
-        if Photo.image != nil {
+        if let data = photo.image {
             DispatchQueue.main.async {
-                cell.imageView.image = UIImage(data: Photo.image!)
+                cell.imageView.image = UIImage(data: data)
                 cell.hideActivityIndicator()
             }
         }

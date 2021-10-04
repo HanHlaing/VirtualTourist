@@ -10,8 +10,8 @@ import UIKit
 import MapKit
 import CoreData
 
-class PhotoAlbumViewController: UIViewController, MKMapViewDelegate,UICollectionViewDelegate {
-  
+class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectionViewDelegate {
+    
     //MARK: - Outlets
     
     @IBOutlet weak var mapView: MKMapView!
@@ -29,7 +29,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate,UICollection
     let reuseId = "ImageViewCell"
     
     //MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -61,28 +61,30 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate,UICollection
     //MARK: - Private methods
     
     func computeFlowLayout() {
+        
         let space: CGFloat = 2.0
-
+        
         let isPortrait = UIDevice.current.orientation.isValidInterfaceOrientation
-            ? UIDevice.current.orientation.isPortrait
-            : (view.frame.size.width < view.frame.size.height)
-
+        ? UIDevice.current.orientation.isPortrait
+        : (view.frame.size.width < view.frame.size.height)
+        
         let numOfCols: CGFloat = isPortrait ? 3.0 : 5.0
         let spacesBetweenCols = numOfCols - 1
-
+        
         let portraitViewWidth = min(view.frame.size.width, view.frame.size.height)
         let landscapeViewWidth = max(view.frame.size.width, view.frame.size.height)
         let horizontalViewDimension = isPortrait ? portraitViewWidth : landscapeViewWidth
-
+        
         let dimension = (horizontalViewDimension - (spacesBetweenCols * space)) / numOfCols
-
+        
         flowLayout.minimumInteritemSpacing = space
         flowLayout.minimumLineSpacing = space
         flowLayout.itemSize = CGSize(width: dimension, height: dimension)
     }
     
+    // First delete album & disable newCollection button until download has finished
     func reloadPhotos() {
-        // First delete our album & disable newCollection button until download has finished
+        
         deletePhotos()
         setButtonsUI(enable: false)
         FlickrClient.getPhotosByLocation(lat: pinSelected.latitude, lon: pinSelected.longitude) { response, error in
@@ -140,14 +142,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate,UICollection
     }
     
     public func showActivityIndicator() {
+        
         DispatchQueue.main.async {
             self.activityIndicator.startAnimating()
             self.view.isUserInteractionEnabled = false
             self.labelNoImage.text = "Downloading..."
-            
         }
     }
-
+    
     public func hideActivityIndicator() {
         DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
@@ -156,11 +158,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate,UICollection
     }
     
     //MARK: - Delegate methods
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-
+        
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             pinView!.canShowCallout = true

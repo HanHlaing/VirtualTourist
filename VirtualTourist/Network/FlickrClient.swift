@@ -28,7 +28,7 @@ class FlickrClient {
                 + "&lat=\(lat)"
                 + "&lon=\(lon)"
                 + "&radius=15"
-                + "&per_page=10"
+                + "&per_page=20"
                 + "&page=\(pageNum)"
                 + "&format=json&nojsoncallback=1"
             }
