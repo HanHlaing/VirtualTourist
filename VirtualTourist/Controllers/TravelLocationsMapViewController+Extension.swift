@@ -30,7 +30,7 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
         case .move:
             fatalError("This is not possible")
         @unknown default:
-            fatalError("Unknown error in this version, please update the app through AppStore")
+            fatalError("Unknown error in this version")
         }
     }
     
